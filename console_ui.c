@@ -4,6 +4,12 @@
 #include <ctype.h>
 #include "console_ui.h"
 #include "file_ops.h"
+#include "models.h"
+
+// Function declarations
+Book* get_book(int book_id);
+Author* get_author(int author_id);
+Publisher* get_publisher(int publisher_id);
 
 // Utility functions
 void clear_screen() {
@@ -33,16 +39,10 @@ void wait_for_enter() {
 
 int get_int_input(const char* prompt) {
     int value;
-    char input[32];
-    while (1) {
-        printf("%s", prompt);
-        if (fgets(input, sizeof(input), stdin) != NULL) {
-            if (sscanf(input, "%d", &value) == 1) {
-                return value;
-            }
-        }
-        printf("Invalid input. Please enter a number.\n");
-    }
+    printf("%s", prompt);
+    scanf("%d", &value);
+    while (getchar() != '\n'); // Clear input buffer
+    return value;
 }
 
 double get_double_input(const char* prompt) {
@@ -630,7 +630,7 @@ void add_publisher_ui() {
     
     get_string_input("Enter publisher name: ", publisher.name, MAX_STRING_LENGTH);
     get_string_input("Enter publisher address: ", publisher.address, MAX_STRING_LENGTH);
-    get_string_input("Enter publisher contact info: ", publisher.contact_info, MAX_STRING_LENGTH);
+    get_string_input("Enter publisher phone: ", publisher.phone, MAX_STRING_LENGTH);
     
     if (add_publisher(&publisher)) {
         printf("\nPublisher added successfully!\n");
@@ -654,7 +654,7 @@ void update_publisher_ui() {
     
     get_string_input("Enter new name (or press Enter to keep current): ", publisher->name, MAX_STRING_LENGTH);
     get_string_input("Enter new address (or press Enter to keep current): ", publisher->address, MAX_STRING_LENGTH);
-    get_string_input("Enter new contact info (or press Enter to keep current): ", publisher->contact_info, MAX_STRING_LENGTH);
+    get_string_input("Enter new phone (or press Enter to keep current): ", publisher->phone, MAX_STRING_LENGTH);
     
     if (update_publisher(publisher)) {
         printf("\nPublisher updated successfully!\n");
@@ -696,7 +696,7 @@ void list_publishers_ui() {
         printf("Publisher ID: %d\n", publishers[i]->publisher_id);
         printf("Name: %s\n", publishers[i]->name);
         printf("Address: %s\n", publishers[i]->address);
-        printf("Contact Info: %s\n", publishers[i]->contact_info);
+        printf("Phone: %s\n", publishers[i]->phone);
         printf("\n");
     }
     
@@ -722,7 +722,7 @@ void search_publisher_ui() {
     printf("\nPublisher ID: %d\n", publisher->publisher_id);
     printf("Name: %s\n", publisher->name);
     printf("Address: %s\n", publisher->address);
-    printf("Contact Info: %s\n", publisher->contact_info);
+    printf("Phone: %s\n", publisher->phone);
     
     free(publisher);
     wait_for_enter();
